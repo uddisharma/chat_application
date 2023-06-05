@@ -41,6 +41,42 @@ class UserController {
       res.status(500).json({ message: err.message });
     }
   };
+  static setAvatar = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const Avatar = req.body.image;
+      const userData = await UserModel.findByIdAndUpdate(
+        userId,
+        {
+          isAvatarset: true,
+          Avatar: Avatar,
+        },
+        { new: true }
+      );
+      return res.json({
+        message: "Avatar is set to " + userData.username,
+      });
+    } catch (err) {
+      res.status(500).json({ message: err });
+    }
+  };
+  static getAllUsers = async (req, res) => {
+    try {
+      const users = await UserModel.find({});
+      res.status(200).json(users);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+  static getUserById = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await UserModel.findById(userId);
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
 }
 
 module.exports = UserController;
