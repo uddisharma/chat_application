@@ -42,7 +42,7 @@ const SetAvatar = () => {
           if (res.status == 200) {
             setIsLoading(false);
             toast.success("Profile picture is saved", toastOptions);
-            navigate('/chat')
+            navigate('/login')
           } else {
             toast.error("Something went wrong", toastOptions);
           }

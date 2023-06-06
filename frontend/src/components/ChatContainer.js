@@ -6,61 +6,67 @@ import ChatInput from "./ChatInput";
 // import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
 
 export default function ChatContainer({ currentChat, socket }) {
-  console.log(currentChat);
+  const from = localStorage.getItem("user");
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
-//   useEffect(async () => {
-//     const data = await JSON.parse(
-//       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//     );
-//     const response = await axios.post(recieveMessageRoute, {
-//       from: data._id,
-//       to: currentChat._id,
-//     });
-//     setMessages(response.data);
-//   }, [currentChat]);
+  useEffect(() => {
+    if (currentChat) {
+      axios
+        .post("http://localhost:5000/getmessages", {
+          from: from,
+          to: currentChat._id,
+        })
+        .then((response) => {
+          console.log(response);
+          setMessages(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [currentChat]);
 
-const handleSendMsg=(e)=>{
-  console.log(e);
-}
+  const handleSendMsg = async (msg) => {
+    // socket.current.emit("send-msg", {
+    //   from: from,
+    //   to: currentChat._id,
+    //   text: msg,
+    // });
+    axios
+      .post("http://localhost:5000/sendMessage", {
+        from: from,
+        to: currentChat._id,
+        text: msg,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-//   const handleSendMsg = async (msg) => {
-//     const data = await JSON.parse(
-//       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//     );
-//     socket.current.emit("send-msg", {
-//       to: currentChat._id,
-//       from: data._id,
-//       msg,
-//     });
-//     await axios.post(sendMessageRoute, {
-//       from: data._id,
-//       to: currentChat._id,
-//       message: msg,
-//     });
+    const msgs = [...messages];
+    msgs.push({ fromSelf: true, message: msg });
+    setMessages(msgs);
+  };
 
-//     const msgs = [...messages];
-//     msgs.push({ fromSelf: true, message: msg });
-//     setMessages(msgs);
-//   };
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("msg-recieve", (msg) => {
+        setArrivalMessage({ fromSelf: false, message: msg });
+      });
+    }
+  }, []);
 
-//   useEffect(() => {
-//     if (socket.current) {
-//       socket.current.on("msg-recieve", (msg) => {
-//         setArrivalMessage({ fromSelf: false, message: msg });
-//       });
-//     }
-//   }, []);
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
 
-//   useEffect(() => {
-//     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-//   }, [arrivalMessage]);
-
-//   useEffect(() => {
-//     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, [messages]);
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <Container>
@@ -68,7 +74,11 @@ const handleSendMsg=(e)=>{
         <div className="user-details">
           <div className="avatar">
             <img
-              src={currentChat.Avatar?currentChat.Avatar:"https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425_1280.png"}
+              src={
+                currentChat.Avatar
+                  ? currentChat.Avatar
+                  : "https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425_1280.png"
+              }
               alt=""
             />
           </div>
@@ -81,9 +91,7 @@ const handleSendMsg=(e)=>{
       <div className="chat-messages">
         {messages.map((message) => {
           return (
-            <div ref={scrollRef}
-            //  key={uuidv4()}
-             >
+            <div ref={scrollRef} key={message._id}>
               <div
                 className={`message ${
                   message.fromSelf ? "sended" : "recieved"

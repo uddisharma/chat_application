@@ -4,7 +4,7 @@ import ChatContainer from "../components/ChatContainer";
 import Welcome from "../components/Welcome";
 import Contacts from "../components/Contacts";
 import axios from "axios";
-
+import { io } from "socket.io-client";
 const Chat = () => {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -26,6 +26,12 @@ const Chat = () => {
       });
   }, []);
   // console.log(contacts);
+  useEffect(() => {
+    if (currentUser) {
+      socket.current = io("http://localhost:5000");
+      socket.current.emit("add-user", currentUser._id);
+    }
+  }, [currentUser]);
   return (
     <>
       <Container>

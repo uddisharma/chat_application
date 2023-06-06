@@ -47,8 +47,8 @@ export default function Login() {
           console.log(res);
           if (res.status === 200) {
             toast.success("login Success", toastOptions);
-            
-            navigate("/");
+            localStorage.setItem("user",res.data.user._id)
+            navigate("/chat");
           } else {
             toast.error("wrong credentials", toastOptions);
           }

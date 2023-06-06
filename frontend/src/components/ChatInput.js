@@ -28,13 +28,13 @@ export default function ChatInput({ handleSendMsg }) {
 
   return (
     <>
-      {/* <div style={{ border:"3px solid red" }} className="emoji">
+      {/* <div className="emoji">
         <BsEmojiSmileFill onClick={handleEmojiPickerhideShow} />
         {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
       </div> */}
       <Container>
         <div className="button-container">
-          <div style={{ height: "100%" }} className="emoji">
+          <div style={{position:"absolute",top:'-1980'}} className="emoji">
             <BsEmojiSmileFill onClick={handleEmojiPickerhideShow} />
             {showEmojiPicker && <Picker  onEmojiClick={handleEmojiClick} />}
           </div>
