@@ -6,6 +6,7 @@ import Contacts from "../components/Contacts";
 import axios from "axios";
 import { io } from "socket.io-client";
 const Chat = () => {
+  const user = localStorage.getItem("user");
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [contacts, setContacts] = useState([]);
@@ -27,9 +28,9 @@ const Chat = () => {
   }, []);
   // console.log(contacts);
   useEffect(() => {
-    if (currentUser) {
+    if (user) {
       socket.current = io("http://localhost:5000");
-      socket.current.emit("add-user", currentUser._id);
+      socket.current.emit("add-user", user);
     }
   }, [currentUser]);
   return (

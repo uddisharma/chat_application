@@ -29,11 +29,11 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
-    // socket.current.emit("send-msg", {
-    //   from: from,
-    //   to: currentChat._id,
-    //   text: msg,
-    // });
+    socket.current.emit("send-msg", {
+      from: from,
+      to: currentChat._id,
+      text: msg,
+    });
     axios
       .post("http://localhost:5000/sendMessage", {
         from: from,
@@ -46,19 +46,21 @@ export default function ChatContainer({ currentChat, socket }) {
       .catch((error) => {
         console.log(error);
       });
-
+ 
     const msgs = [...messages];
     msgs.push({ fromSelf: true, message: msg });
     setMessages(msgs);
   };
 
   useEffect(() => {
-    if (socket.current) {
+    // if (socket.current) {
       socket.current.on("msg-recieve", (msg) => {
+        console.log(msg);
+
         setArrivalMessage({ fromSelf: false, message: msg });
       });
-    }
-  }, []);
+    
+  }, [socket]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
