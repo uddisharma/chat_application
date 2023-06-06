@@ -49,7 +49,7 @@ export default function Contacts({ contacts, changeChat }) {
                   onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
-                    <img src={contact.Avatar} alt="" />
+                    <img src={contact.Avatar?contact.Avatar:"https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425_1280.png"} alt="" />
                   </div>
                   <div className="username">
                     <h3>{contact.username}</h3>

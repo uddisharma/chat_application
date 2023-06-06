@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-// import ChatInput from "./ChatInput";
-// import Logout from "./Logout";
-// import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import Logout from "./Logout";
+import ChatInput from "./ChatInput";
 // import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
 
 export default function ChatContainer({ currentChat, socket }) {
+  console.log(currentChat);
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -23,16 +22,9 @@ export default function ChatContainer({ currentChat, socket }) {
 //     setMessages(response.data);
 //   }, [currentChat]);
 
-//   useEffect(() => {
-//     const getCurrentChat = async () => {
-//       if (currentChat) {
-//         await JSON.parse(
-//           localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//         )._id;
-//       }
-//     };
-//     getCurrentChat();
-//   }, [currentChat]);
+const handleSendMsg=(e)=>{
+  console.log(e);
+}
 
 //   const handleSendMsg = async (msg) => {
 //     const data = await JSON.parse(
@@ -76,7 +68,7 @@ export default function ChatContainer({ currentChat, socket }) {
         <div className="user-details">
           <div className="avatar">
             <img
-              src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
+              src={currentChat.Avatar?currentChat.Avatar:"https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425_1280.png"}
               alt=""
             />
           </div>
@@ -105,7 +97,7 @@ export default function ChatContainer({ currentChat, socket }) {
           );
         })}
       </div>
-      {/* <ChatInput handleSendMsg={handleSendMsg} /> */}
+      <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
 }

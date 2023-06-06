@@ -68,6 +68,8 @@ const Register = () => {
           console.log(res);
           if (res.status == 201) {
             localStorage.setItem("user", res.data._id);
+            localStorage.setItem("username", res.data.username);
+
             setMessage("User registration successful");
             toast.success("Register successfull", toastOptions);
             navigate("/setavatar");

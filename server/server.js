@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors= require("cors");
 require("dotenv").config();
 const UserRoutes= require('./routes/UserRoute')
+const MessageRoutes= require("./routes/MessageRoute")
 mongoose
   .connect("mongodb://127.0.0.1/chat-app", {
     useNewUrlParser: true,
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use(cors());
 app.use(express.json())
 app.use("/",UserRoutes)
+app.use("/",MessageRoutes)
 app.listen(5000, () => {
   console.log("Server is running");
 });
